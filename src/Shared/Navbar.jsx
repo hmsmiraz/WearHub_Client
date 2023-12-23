@@ -1,20 +1,38 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import useAuth from "../Hooks/useAuth";
+import Swal from "sweetalert2";
 const Navbar = () => {
-    const navLinks = (
-        <>
-          <li>
-            <NavLink to="/">Home</NavLink>
-          </li>
-          <li>
-            <NavLink to="/addProduct">Add Product</NavLink>
-          </li>
-          <li>
-            <NavLink to="/cart">Cart</NavLink>
-          </li>
-        </>
-      );
-    return (
-        <div className="navbar bg-base-100">
+  const { user, logOut } = useAuth();
+  const navigate = useNavigate();
+  const handleSignOut = () => {
+    logOut()
+      .then(() => {
+        console.log("Logout");
+        Swal.fire({
+          title: "Success!",
+          text: "Log out Successfully",
+          icon: "success",
+          confirmButtonText: "Cool",
+        });
+        navigate("/");
+      })
+      .catch();
+  };
+  const navLinks = (
+    <>
+      <li>
+        <NavLink to="/">Home</NavLink>
+      </li>
+      <li>
+        <NavLink to="/addProduct">Add Product</NavLink>
+      </li>
+      <li>
+        <NavLink to="/cart">Cart</NavLink>
+      </li>
+    </>
+  );
+  return (
+    <div className="navbar bg-base-100">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -40,17 +58,21 @@ const Navbar = () => {
             {navLinks}
           </ul>
         </div>
-        <div className="w-10 rounded-full">
+        <div>
           <Link to={"/"}>
-            <img src="/vite.svg" />
+            <div className="flex justify-center items-center">
+              <div>
+                <img src="/vite.svg" className="md:w-10 rounded-full" />
+              </div>
+              <div>
+                <p className="font-bold text-xl md:pl-2">
+                  Wear
+                  <span className="text-[#005AE5]">Hub</span>
+                </p>
+              </div>
+            </div>
           </Link>
         </div>
-        <Link to={"/"}>
-          <p className="font-bold text-xl md:pl-2">
-            Wear
-            <span className="text-[#005AE5]">Hub</span>
-          </p>
-        </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{navLinks}</ul>
@@ -58,22 +80,22 @@ const Navbar = () => {
       <div className="navbar-end">
         <div className="flex items-center justify-center">
           <div>
-            {/* {user ? (
+            {user ? (
               <button onClick={handleSignOut} className="btn btn-neutral">
                 Log Out
               </button>
-            ) : ( */}
+            ) : (
               <Link to="/login">
                 <button className="btn btn-primary text-white font-bold">
                   Login
                 </button>
               </Link>
-            {/* )} */}
+            )}
           </div>
         </div>
       </div>
     </div>
-    );
+  );
 };
 
 export default Navbar;
