@@ -1,13 +1,17 @@
 import useAuth from "../../Hooks/useAuth";
 import { useLoaderData } from "react-router-dom";
 import { BsFillCartPlusFill } from "react-icons/bs";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import Swal from "sweetalert2";
 const ProductDetails = () => {
   const { user } = useAuth();
   const email = user?.email;
   const productSingle = useLoaderData();
+  const axiosPublic = useAxiosPublic();
 
   const { _id, title, image, color, size, price, description } = productSingle;
-  const handleCart = () => {
+
+  const handleCart = async () => {
     const cartData = {
         email,
         ProductId: _id,
@@ -18,7 +22,16 @@ const ProductDetails = () => {
         color,
     }
     console.log(cartData)
-    
+    const result = await axiosPublic.post("/carts", cartData);
+    if (result.data.insertedId) {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: `${title} add to Cart, Thank You.`,
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
   };
 
   return (

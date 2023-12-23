@@ -39,7 +39,7 @@ export const router = createBrowserRouter([
             path: "/products/:id",
             element: <PrivateRoutes><ProductDetails></ProductDetails></PrivateRoutes>,
             loader: ({ params }) =>
-              fetch(`http://localhost:5000/products/${params.id}`),
+              fetch(`https://wear-hub-server.vercel.app/products/${params.id}`),
           },
       ]
     },
